@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <fragment
+
+    <fragment android:name="sirup.edubook_api_test.ChaptersFragment"
+        android:tag="@string/fragment"
         android:id="@+id/reading_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
+        android:layout_height="match_parent">
+    </fragment>
+    
 </android.support.constraint.ConstraintLayout>

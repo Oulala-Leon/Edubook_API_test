@@ -9,7 +9,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
-import android.widget.Button;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,12 +26,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        ChaptersFragment cf = new ChaptersFragment();
-        fragmentTransaction.add(R.id.reading_fragment, cf);
-        fragmentTransaction.commit();
+        String bookUrl = "https://api.lelivrescolaire.fr/public/books";
+        myHttpRequest request = new myHttpRequest();
+
+        JSONObject json = request.getHttpResponse(this, bookUrl);
+
+        //FragmentManager fm = getFragmentManager();
+        //FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        //ChaptersFragment cf = (ChaptersFragment) new ChaptersFragment();
+        //fragmentTransaction.add(R.id.reading_fragment, cf);
+        //fragmentTransaction.commit();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

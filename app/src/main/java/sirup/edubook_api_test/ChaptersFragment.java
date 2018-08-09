@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 public class ChaptersFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.chaptersfragment, null);
-        return v;
+        super.onCreateView(inflater, container, savedInstanceState);
+        return inflater.inflate(R.layout.chaptersfragment, container, false);
 
     }
 }

@@ -2,4 +2,5 @@
     <string name="app_name">Edubook_API_test</string>
     <string name="book_title">Manuel de SVT - titre temp</string>
     <string name="return_button">return to start</string>
+    <string name="fragment">reading fragment</string>
 </resources>
