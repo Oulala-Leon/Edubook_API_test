@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Edubook_API_test</string>
+    <string name="book_title">Manuel de SVT - temp</string>
+    <string name="return_button">return to start</string>
 </resources>
