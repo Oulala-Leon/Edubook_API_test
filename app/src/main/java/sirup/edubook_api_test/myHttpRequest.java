@@ -7,16 +7,20 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static com.android.volley.VolleyLog.TAG;
+
 public class myHttpRequest extends Volley{
-    private JSONObject ret;
-    public JSONObject getHttpResponse(Context context, String url) {
-        // Instantiate the RequestQueue.
+    private JSONArray ret;
+    public JSONArray getHttpResponse(Context context, String url) {
+
         RequestQueue queue = Volley.newRequestQueue(context);
 
         // Request a string response from the provided URL.
@@ -24,9 +28,9 @@ public class myHttpRequest extends Volley{
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
                         try {
-                            ret = new JSONObject(response);
+                            Log.d(TAG, "response :" + response);
+                            ret = new JSONArray(response);
                         }
                         catch (JSONException e) {
                             e.printStackTrace();
@@ -35,7 +39,7 @@ public class myHttpRequest extends Volley{
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("onErrorResponse:", "you done goofed");
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
             }
         });
 

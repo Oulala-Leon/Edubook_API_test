@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 
@@ -23,15 +24,14 @@ public class MainActivity extends AppCompatActivity {
         //get SVT book
         String bookUrl = "https://api.lelivrescolaire.fr/public/books/1339497/chapters";
         myHttpRequest request = new myHttpRequest();
-        JSONObject SVT_Book = request.getHttpResponse(this, bookUrl);
+        JSONArray SVT_Book = request.getHttpResponse(this, bookUrl);
 
-        //FragmentManager fm = getFragmentManager();
-        //FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        //ChaptersFragment cf = (ChaptersFragment) new ChaptersFragment();
-        //fragmentTransaction.add(R.id.reading_fragment, cf);
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        ChaptersFragment cf = (ChaptersFragment) new ChaptersFragment();
+        fragmentTransaction.add(R.id.reading_fragment, cf);
         //fragmentTransaction.commit();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
