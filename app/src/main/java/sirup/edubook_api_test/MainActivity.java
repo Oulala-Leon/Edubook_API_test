@@ -26,8 +26,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //set Chapters
+        JSONArray SVT_Book = null;
         myHttpRequest request = myHttpRequest.getInstance(this);
-        JSONArray SVT_Book = myHttpRequest.getJSONArray(bookUrl);
+        myHttpRequest.getJSONArray(bookUrl, SVT_Book);
         JSONAdapter adapter = new JSONAdapter(SVT_Book, this, request);
 
         FragmentManager fm = getFragmentManager();

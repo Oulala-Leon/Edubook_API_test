@@ -63,8 +63,8 @@ public class JSONAdapter extends BaseAdapter implements ListAdapter {
                 String title = json_data.getString("title");
                 text.setText(title);
                 String url = json_data.getString("url");
-                Bitmap image = httpRequest.getImage(url);
-                imageView.setImageBitmap(image);
+                //Bitmap image = httpRequest.getImage(url);
+                //imageView.setImageBitmap(image);
             }catch (JSONException e) {
                 e.printStackTrace();
             }

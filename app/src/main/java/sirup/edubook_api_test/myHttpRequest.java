@@ -21,13 +21,10 @@ import static com.android.volley.VolleyLog.TAG;
 
 public class myHttpRequest extends Volley{
     private static myHttpRequest instance = null;
-    private JSONArray ret;
-    private    Bitmap image;
-    final private Context context;
-    public RequestQueue queue;
+    private Bitmap image;
+    private static RequestQueue queue;
     private myHttpRequest (Context context)
     {
-        this.context = context.getApplicationContext();
         queue = Volley.newRequestQueue(context.getApplicationContext());
     }
 
@@ -48,16 +45,16 @@ public class myHttpRequest extends Volley{
         return instance;
     }
 
-    public static synchronized JSONArray getJSONArray(String url) {
-
+    public static synchronized JSONArray getJSONArray(String url, final JSONArray array) {
         // Request a string response from the provided URL.
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
                             Log.d(TAG, "response :" + response);
-                            ret = new JSONArray(response);
+                            getReturnedArray(new JSONArray(response), array);
                         }
                         catch (JSONException e) {
                             e.printStackTrace();
@@ -72,10 +69,14 @@ public class myHttpRequest extends Volley{
 
 // Add the request to the RequestQueue.
         queue.add(stringRequest);
-        return ret;
+        return array;
     }
 
-    public Bitmap getImage(String url) {
+    private static synchronized void getReturnedArray(JSONArray response, JSONArray array) {
+        array = response;
+    }
+
+/*    public Bitmap getImage(String url) {
 
         ImageRequest imageRequest = new ImageRequest(url,
                 new Response.Listener<Bitmap>() {
@@ -88,5 +89,5 @@ public class myHttpRequest extends Volley{
 // Add the request to the RequestQueue.
         queue.add(imageRequest);
         return image;
-    }
+    }*/
 }
