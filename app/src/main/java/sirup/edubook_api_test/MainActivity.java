@@ -26,13 +26,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //set Chapters
-        myHttpRequest request = new myHttpRequest();
-        JSONArray SVT_Book = request.getHttpResponse(this, bookUrl);
-        JSONAdapter adapter = new JSONAdapter(SVT_Book);
+        myHttpRequest request = myHttpRequest.getInstance(this);
+        JSONArray SVT_Book = myHttpRequest.getJSONArray(bookUrl);
+        JSONAdapter adapter = new JSONAdapter(SVT_Book, this, request);
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        ChaptersFragment cf = (ChaptersFragment) new ChaptersFragment();
+        ChaptersFragment cf = new ChaptersFragment();
         fragmentTransaction.add(R.id.reading_fragment, cf);
         //fragmentTransaction.commit();
     }
