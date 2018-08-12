@@ -19,9 +19,9 @@ public class JSONAdapter extends BaseAdapter implements ListAdapter {
     private JSONArray _jsonArray;
     private Context _context;
 
-    public JSONAdapter (JSONArray array) {
+    public JSONAdapter (JSONArray array, Context context) {
         _jsonArray = array;
-        _context.getApplicationContext();
+        _context = context.getApplicationContext();
     }
 
     @Override public int getCount() {

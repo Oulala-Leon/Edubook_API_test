@@ -49,26 +49,16 @@ public class myHttpRequest extends Volley{
         return _instance;
     }
 
-    public static synchronized void setJSONArray(String url, ListView view) {
-        JSONArray array = new JSONArray();
-        JSONAdapter adapter = new JSONAdapter(array);
-        view.setAdapter(adapter);
+    public static synchronized void setJSONArray(final String url, final ListView view) {
 
-        JsonArrayRequest JSONArrayRequest = new JsonArrayRequest(Request.Method.GET, url,
+        JsonArrayRequest JSONArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        try {
-                            Log.d(TAG, "response :" + response);
-                            for (int i=0;i<response.length();i++)
-                            {
-                                
-
-                            }
-                        }
-                        catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        Log.d(TAG, "response :" + response);
+                        final JSONAdapter adapter = new JSONAdapter(response, _context);
+                        view.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
                     }
                 }, new Response.ErrorListener() {
             @Override
