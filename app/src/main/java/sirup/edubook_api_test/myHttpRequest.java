@@ -3,6 +3,8 @@ package sirup.edubook_api_test;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
+import android.view.View;
+import android.widget.ListView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -10,6 +12,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -20,41 +23,48 @@ import org.json.JSONObject;
 import static com.android.volley.VolleyLog.TAG;
 
 public class myHttpRequest extends Volley{
-    private static myHttpRequest instance = null;
-    private Bitmap image;
-    private static RequestQueue queue;
+    private static myHttpRequest _instance = null;
+    private static RequestQueue _queue;
+    private static Context _context;
     private myHttpRequest (Context context)
     {
-        queue = Volley.newRequestQueue(context.getApplicationContext());
+        _context = context.getApplicationContext();
+        _queue = Volley.newRequestQueue(context.getApplicationContext());
     }
 
     public static synchronized myHttpRequest getInstance(Context context)
     {
-        if (instance == null)
-            instance = new myHttpRequest(context);
-        return instance;
+        if (_instance == null)
+            _instance = new myHttpRequest(context);
+        return _instance;
     }
 
     public static synchronized myHttpRequest getInstance()
     {
-        if (instance == null)
+        if (_instance == null)
         {
             throw new IllegalStateException(myHttpRequest.class.getSimpleName() +
             " is not initialised, call getInstance(context) first");
         }
-        return instance;
+        return _instance;
     }
 
-    public static synchronized JSONArray getJSONArray(String url, final JSONArray array) {
-        // Request a string response from the provided URL.
+    public static synchronized void setJSONArray(String url, ListView view) {
+        JSONArray array = new JSONArray();
+        JSONAdapter adapter = new JSONAdapter(array);
+        view.setAdapter(adapter);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
+        JsonArrayRequest JSONArrayRequest = new JsonArrayRequest(Request.Method.GET, url,
+                new Response.Listener<JSONArray>() {
                     @Override
-                    public void onResponse(String response) {
+                    public void onResponse(JSONArray response) {
                         try {
                             Log.d(TAG, "response :" + response);
-                            getReturnedArray(new JSONArray(response), array);
+                            for (int i=0;i<response.length();i++)
+                            {
+                                
+
+                            }
                         }
                         catch (JSONException e) {
                             e.printStackTrace();
@@ -68,12 +78,7 @@ public class myHttpRequest extends Volley{
         });
 
 // Add the request to the RequestQueue.
-        queue.add(stringRequest);
-        return array;
-    }
-
-    private static synchronized void getReturnedArray(JSONArray response, JSONArray array) {
-        array = response;
+        _queue.add(JSONArrayRequest);
     }
 
 /*    public Bitmap getImage(String url) {

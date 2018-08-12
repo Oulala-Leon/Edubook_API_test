@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import org.json.JSONArray;
@@ -26,10 +27,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //set Chapters
-        JSONArray SVT_Book = null;
-        myHttpRequest request = myHttpRequest.getInstance(this);
-        myHttpRequest.getJSONArray(bookUrl, SVT_Book);
-        JSONAdapter adapter = new JSONAdapter(SVT_Book, this, request);
+        ListView listView = findViewById(R.id.Chapters_List);
+        myHttpRequest.getInstance(this);
+        myHttpRequest.setJSONArray(bookUrl, listView);
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();

@@ -2,10 +2,7 @@ package sirup.edubook_api_test;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -19,42 +16,40 @@ import org.json.JSONObject;
 
 public class JSONAdapter extends BaseAdapter implements ListAdapter {
 
-    private JSONArray jsonArray;
-    private Context context;
-    private Activity activity;
-    private myHttpRequest httpRequest;
+    private JSONArray _jsonArray;
+    private Context _context;
 
-    public JSONAdapter (JSONArray array, Activity activity, myHttpRequest myhttprequest) {
-        this.jsonArray = array;
-        this.activity = activity;
-        this.httpRequest = myhttprequest;
+    public JSONAdapter (JSONArray array) {
+        _jsonArray = array;
+        _context.getApplicationContext();
     }
 
     @Override public int getCount() {
-        if(jsonArray==null)
+        if(_jsonArray ==null)
             return 0;
         else
-            return jsonArray.length();
+            return _jsonArray.length();
     }
 
     @Override public JSONObject getItem(int position) {
-        if(jsonArray==null) return null;
+        if(_jsonArray ==null) return null;
         else
-            return jsonArray.optJSONObject(position);
+            return _jsonArray.optJSONObject(position);
     }
 
     @Override public long getItemId(int position) {
         JSONObject jsonObject = getItem(position);
-
         return jsonObject.optLong("id");
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null)
-            convertView = activity.getLayoutInflater().inflate(R.layout.chapterslist_row, null);
+        if (convertView == null) {
+            LayoutInflater inflater = LayoutInflater.from(_context);
+            convertView = inflater.inflate(R.layout.chapterslist_row, parent); //possibly second argument should be null
+        }
 
-        TextView text =convertView.findViewById(R.id.chapter_title);
+        TextView text = convertView.findViewById(R.id.chapter_title);
         ImageView imageView =convertView.findViewById(R.id.chapter_image);
 
         JSONObject json_data = getItem(position);
@@ -63,7 +58,7 @@ public class JSONAdapter extends BaseAdapter implements ListAdapter {
                 String title = json_data.getString("title");
                 text.setText(title);
                 String url = json_data.getString("url");
-                //Bitmap image = httpRequest.getImage(url);
+                //Bitmap image = myHttpRequest.getImage(url);
                 //imageView.setImageBitmap(image);
             }catch (JSONException e) {
                 e.printStackTrace();
