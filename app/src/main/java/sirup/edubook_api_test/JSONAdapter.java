@@ -2,6 +2,7 @@ package sirup.edubook_api_test;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +51,7 @@ public class JSONAdapter extends BaseAdapter implements ListAdapter {
         }
 
         TextView text = convertView.findViewById(R.id.chapter_title);
-        ImageView imageView =convertView.findViewById(R.id.chapter_image);
+        ImageView imageView = convertView.findViewById(R.id.chapter_image);
 
         JSONObject json_data = getItem(position);
         if(null!=json_data ){
@@ -58,8 +59,7 @@ public class JSONAdapter extends BaseAdapter implements ListAdapter {
                 String title = json_data.getString("title");
                 text.setText(title);
                 String url = json_data.getString("url");
-                //Bitmap image = myHttpRequest.getImage(url);
-                //imageView.setImageBitmap(image);
+                myHttpRequest.setImage(url, imageView);
             }catch (JSONException e) {
                 e.printStackTrace();
             }

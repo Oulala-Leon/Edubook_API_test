@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.android.volley.Request;
@@ -71,18 +72,17 @@ public class myHttpRequest extends Volley{
         _queue.add(JSONArrayRequest);
     }
 
-/*    public Bitmap getImage(String url) {
+    public static synchronized void setImage(final String url, final ImageView imageView) {
 
         ImageRequest imageRequest = new ImageRequest(url,
                 new Response.Listener<Bitmap>() {
                     @Override
                     public void onResponse(Bitmap response) {
-                            image = response;
+                        imageView.setImageBitmap(response);
                     }
                 }, 0,0, null,null);
 
 // Add the request to the RequestQueue.
-        queue.add(imageRequest);
-        return image;
-    }*/
+        _queue.add(imageRequest);
+    }
 }
