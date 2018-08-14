@@ -1,39 +1,33 @@
 package sirup.edubook_api_test;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.database.sqlite.*;
-import android.util.Log;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.View;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 
 public class MainActivity extends AppCompatActivity {
     String bookUrl = "https://api.lelivrescolaire.fr/public/books/1339497/chapters";
-    SimpleCursorAdapter cursorAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Activity activity = this;
 
         //set Chapters
-        ListView listView = findViewById(R.id.Chapters_List);
-        myHttpRequest.getInstance(this);
-        myHttpRequest.setJSONArray(bookUrl, listView);
+        RecyclerView recyclerView = findViewById(R.id.Chapters_List);
+        myHttpRequest.getInstance(activity);
+        myHttpRequest.queryJSONArray(bookUrl, recyclerView);
 
         FragmentManager fm = getFragmentManager();
+        ChaptersFragment cf = (ChaptersFragment) fm.findFragmentById(R.id.reading_fragment);
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        ChaptersFragment cf = new ChaptersFragment();
         fragmentTransaction.add(R.id.reading_fragment, cf);
         //fragmentTransaction.commit();
     }
