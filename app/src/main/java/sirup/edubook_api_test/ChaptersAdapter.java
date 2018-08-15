@@ -2,6 +2,8 @@ package sirup.edubook_api_test;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,8 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,7 +45,7 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
             return chaptersArray.length();
     }
 
-    public JSONObject getItem(int position) {
+    private JSONObject getItem(int position) {
         if (chaptersArray == null) return null;
         else
             return chaptersArray.optJSONObject(position);
@@ -57,19 +57,21 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
         return jsonObject.optLong("id");
     }
 
-    @Override
-    public void onCreateViewHolder(ViewGroup parent, int position) {
-        if (convertView == null) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            convertView = inflater.inflate(R.layout.chapterslist_row, parent, false);
-        }
+    @Override @NonNull
+    public ChaptersAdapter.ViewHolder  onCreateViewHolder(@NonNull ViewGroup parent, int position) {
+        Log.d(TAG, "in onCreateViewHolder");
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View chaptersView = inflater.inflate(R.layout.chapterslist_row, parent, false);
+        return new ViewHolder(chaptersView);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder VH, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder VH, int position) {
 
-        TextView text = convertView.findViewById(R.id.chapter_title);
-        ImageView imageView = convertView.findViewById(R.id.chapter_image);
+        final TextView text = VH.lessonTitle;
+        final ImageView imageView = VH.lessonImage;
+        Log.d(TAG, "in onBindViewHolder");
 
         JSONObject json_data = getItem(position);
         if (null != json_data) {
@@ -77,12 +79,18 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
                 String title = json_data.getString("title");
                 text.setText(title);
                 String url = json_data.getString("url");
-                myHttpRequest.queryImage(url, imageView);
+                Response.Listener<Bitmap> image = new Response.Listener<Bitmap>() {
+                    @Override
+                    public void onResponse(Bitmap response) {
+                        Log.d(TAG, "response :" + response);
+                        imageView.setImageBitmap(response);
+                    }
+                };
+                myHttpRequest.queryImage(url, image);
             } catch (JSONException e) {
                 Log.d("ChaptersAdapter: ", e.getMessage(), e);
             }
         }
-        return convertView;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -29,14 +29,12 @@ public class MainActivity extends AppCompatActivity {
         manager.setOrientation(LinearLayout.VERTICAL);
         recyclerView.setLayoutManager(manager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        //myHttpRequest.queryJSONArray(bookUrl, recyclerView);
-        ChaptersAdapter adapter;
 
-        FragmentManager fm = getFragmentManager();
+        /*FragmentManager fm = getFragmentManager();
         ChaptersFragment cf = (ChaptersFragment) fm.findFragmentById(R.id.reading_fragment);
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.add(R.id.reading_fragment, cf);
-        //fragmentTransaction.commit();
+        //fragmentTransaction.commit();*/
     }
 
     @Override

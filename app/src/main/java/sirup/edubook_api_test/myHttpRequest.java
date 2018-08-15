@@ -63,14 +63,8 @@ public class myHttpRequest extends Volley {
     public static synchronized void queryImage(final String url, Response.
             Listener<Bitmap> response) {
 
-        /*ImageRequest imageRequest = new ImageRequest(url,
-                new Response.Listener<Bitmap>() {
-                    @Override
-                    public void onResponse(Bitmap response) {
-                        imageView.setImageBitmap(response);
-                    }
-                }, 0, 0, null, null);
-
-        queue.add(imageRequest);*/
+        ImageRequest imageRequest = new ImageRequest(url,response,
+                 0, 0, null, null);
+        queue.add(imageRequest);
     }
 }
