@@ -24,6 +24,7 @@ public class myHttpRequest extends Volley {
     private static myHttpRequest instance = null;
     private static RequestQueue queue;
     private static Context context;
+
     private myHttpRequest(Context context) {
         queue = Volley.newRequestQueue(context);
     }
@@ -43,30 +44,26 @@ public class myHttpRequest extends Volley {
         return instance;
     }
 
-    public static synchronized void queryJSONArray(final String url, final RecyclerView view) {
+    public static synchronized void queryJSONArray(final String url, final Response.Listener<JSONArray> response) {
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.d(TAG, "response :" + response);
-                        final JSONAdapter adapter = new JSONAdapter(response, context);
-                        view.setAdapter(adapter);
-                        adapter.notifyDataSetChanged();
-                    }
-                }, new Response.ErrorListener() {
+        final Response.ErrorListener error = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                VolleyLog.d(TAG, "Error, YOU HAVE NO INTERNET FOOL! :" + error.getMessage());
             }
-        });
+        };
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
+                response, error);
 
         queue.add(jsonArrayRequest);
     }
 
-    public static synchronized void queryImage(final String url, final ImageView imageView) {
 
-        ImageRequest imageRequest = new ImageRequest(url,
+    public static synchronized void queryImage(final String url, Response.
+            Listener<Bitmap> response) {
+
+        /*ImageRequest imageRequest = new ImageRequest(url,
                 new Response.Listener<Bitmap>() {
                     @Override
                     public void onResponse(Bitmap response) {
@@ -74,6 +71,6 @@ public class myHttpRequest extends Volley {
                     }
                 }, 0, 0, null, null);
 
-        queue.add(imageRequest);
+        queue.add(imageRequest);*/
     }
 }

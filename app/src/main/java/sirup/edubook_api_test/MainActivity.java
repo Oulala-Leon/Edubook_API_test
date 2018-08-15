@@ -3,27 +3,34 @@ package sirup.edubook_api_test;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.widget.LinearLayout;
 
 
 public class MainActivity extends AppCompatActivity {
-    String bookUrl = "https://api.lelivrescolaire.fr/public/books/1339497/chapters";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Activity activity = this;
+        myHttpRequest.getInstance(activity);
 
         //set Chapters
         RecyclerView recyclerView = findViewById(R.id.Chapters_List);
-        myHttpRequest.getInstance(activity);
-        myHttpRequest.queryJSONArray(bookUrl, recyclerView);
+        recyclerView.setAdapter(new ChaptersAdapter(this));
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setOrientation(LinearLayout.VERTICAL);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        //myHttpRequest.queryJSONArray(bookUrl, recyclerView);
+        ChaptersAdapter adapter;
 
         FragmentManager fm = getFragmentManager();
         ChaptersFragment cf = (ChaptersFragment) fm.findFragmentById(R.id.reading_fragment);
