@@ -22,19 +22,18 @@ import static com.android.volley.VolleyLog.TAG;
 
 public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHolder> {
     private JSONArray chaptersArray;
-    private Context context;
 
-    public ChaptersAdapter(Activity activity) {
+    public ChaptersAdapter() {
         String bookUrl = "https://api.lelivrescolaire.fr/public/books/1339497/chapters";
         Response.Listener<JSONArray> response = new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 Log.d(TAG, "response :" + response);
                 chaptersArray = response;
+                notifyDataSetChanged();
             }
         };
         myHttpRequest.queryJSONArray(bookUrl, response);
-        this.context = activity;
     }
 
     @Override
@@ -59,7 +58,6 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
 
     @Override @NonNull
     public ChaptersAdapter.ViewHolder  onCreateViewHolder(@NonNull ViewGroup parent, int position) {
-        Log.d(TAG, "in onCreateViewHolder");
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View chaptersView = inflater.inflate(R.layout.chapterslist_row, parent, false);
@@ -71,7 +69,6 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
 
         final TextView text = VH.lessonTitle;
         final ImageView imageView = VH.lessonImage;
-        Log.d(TAG, "in onBindViewHolder");
 
         JSONObject json_data = getItem(position);
         if (null != json_data) {
@@ -84,6 +81,7 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
                     public void onResponse(Bitmap response) {
                         Log.d(TAG, "response :" + response);
                         imageView.setImageBitmap(response);
+                        notifyDataSetChanged();
                     }
                 };
                 myHttpRequest.queryImage(url, image);

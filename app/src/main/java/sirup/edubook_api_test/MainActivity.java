@@ -24,17 +24,21 @@ public class MainActivity extends AppCompatActivity {
 
         //set Chapters
         RecyclerView recyclerView = findViewById(R.id.Chapters_List);
-        recyclerView.setAdapter(new ChaptersAdapter(this));
+        recyclerView.setAdapter(new ChaptersAdapter());
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayout.VERTICAL);
         recyclerView.setLayoutManager(manager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        //set Lessons
         /*FragmentManager fm = getFragmentManager();
         ChaptersFragment cf = (ChaptersFragment) fm.findFragmentById(R.id.reading_fragment);
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.add(R.id.reading_fragment, cf);
         //fragmentTransaction.commit();*/
+
+        //set Templates
+
     }
 
     @Override

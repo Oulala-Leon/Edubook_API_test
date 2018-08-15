@@ -64,7 +64,7 @@ public class myHttpRequest extends Volley {
             Listener<Bitmap> response) {
 
         ImageRequest imageRequest = new ImageRequest(url,response,
-                 0, 0, null, null);
+                 100, 100, null, null);
         queue.add(imageRequest);
     }
 }
