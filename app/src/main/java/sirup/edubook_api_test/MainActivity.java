@@ -30,15 +30,19 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(manager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+
         //set Lessons
         /*FragmentManager fm = getFragmentManager();
         ChaptersFragment cf = (ChaptersFragment) fm.findFragmentById(R.id.reading_fragment);
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.add(R.id.reading_fragment, cf);
-        //fragmentTransaction.commit();*/
+        //fragmentTransaction.commit();
 
         //set Templates
-
+        TemplatesFragment tf = (TemplatesFragment) fm.findFragmentById(R.id.templates);
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.add(R.id.templates, tf);
+        //fragmentTransaction.commit();*/
     }
 
     @Override
