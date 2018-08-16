@@ -22,6 +22,7 @@ import static com.android.volley.VolleyLog.TAG;
 
 public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHolder> {
     private JSONArray chaptersArray;
+    private RecyclerView recyclerView;
 
     public ChaptersAdapter() {
         String bookUrl = "https://api.lelivrescolaire.fr/public/books/1339497/chapters";
@@ -34,6 +35,13 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
             }
         };
         myHttpRequest.queryJSONArray(bookUrl, response);
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+
+        this.recyclerView = recyclerView;
     }
 
     @Override
@@ -56,8 +64,9 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
         return jsonObject.optLong("id");
     }
 
-    @Override @NonNull
-    public ChaptersAdapter.ViewHolder  onCreateViewHolder(@NonNull ViewGroup parent, int position) {
+    @Override
+    @NonNull
+    public ChaptersAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View chaptersView = inflater.inflate(R.layout.chapterslist_row, parent, false);
@@ -84,6 +93,17 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
                         notifyDataSetChanged();
                     }
                 };
+                boolean valid = json_data.getBoolean("valid");
+                if (!valid) {
+                    VH.itemView.setBackgroundColor(0xFF555555);
+                    //recyclerView.findViewHolderForAdapterPosition(position);
+                }
+                /*
+                else setOnClickListener()
+                {
+
+                }
+                 */
                 myHttpRequest.queryImage(url, image);
             } catch (JSONException e) {
                 Log.d("ChaptersAdapter: ", e.getMessage(), e);
