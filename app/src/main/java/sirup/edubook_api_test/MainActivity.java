@@ -23,6 +23,12 @@ public class MainActivity extends AppCompatActivity {
         myHttpRequest.getInstance(activity);
 
         //set Chapters
+        FragmentManager fm = getFragmentManager();
+        ChaptersFragment cf = new ChaptersFragment();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.add(R.id.Chapters_Fragment, cf);
+        fragmentTransaction.commit();
+
         RecyclerView recyclerView = findViewById(R.id.Chapters_List);
         recyclerView.setAdapter(new ChaptersAdapter());
         LinearLayoutManager manager = new LinearLayoutManager(this);
@@ -32,11 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         //set Lessons
-        /*FragmentManager fm = getFragmentManager();
-        ChaptersFragment cf = (ChaptersFragment) fm.findFragmentById(R.id.reading_fragment);
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.add(R.id.reading_fragment, cf);
-        fragmentTransaction.commit();
+        //fragmentTransaction.add(R.id.Lessons_Fragment, cf);
+        //fragmentTransaction.commit();
 
         //set Templates
         /*TemplatesFragment tf = (TemplatesFragment) fm.findFragmentById(R.id.templates);
