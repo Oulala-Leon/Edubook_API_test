@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -80,19 +82,26 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
         final ImageView imageView = VH.lessonImage;
 
         JSONObject json_data = getItem(position);
+        ImageLoader imageLoader = myHttpRequest.getInstance().getImageLoader();
+
         if (null != json_data) {
             try {
                 String title = json_data.getString("title");
                 text.setText(title);
                 String url = json_data.getString("url");
-                Response.Listener<Bitmap> image = new Response.Listener<Bitmap>() {
+                imageLoader.get(url, new ImageLoader.ImageListener() {
                     @Override
-                    public void onResponse(Bitmap response) {
+                    public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
                         Log.d(TAG, "response :" + response);
-                        imageView.setImageBitmap(response);
-                        notifyDataSetChanged();
+                        imageView.setImageBitmap(response.getBitmap());
+                        //notifyDataSetChanged();
                     }
-                };
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "VolleyError :" + error.toString());
+                    }
+                });
                 boolean valid = json_data.getBoolean("valid");
                 if (!valid) {
                     VH.itemView.setBackgroundColor(0xFF555555);
@@ -104,7 +113,7 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
 
                 }
                  */
-                myHttpRequest.queryImage(url, image);
+                //myHttpRequest.queryImage(url, image);
             } catch (JSONException e) {
                 Log.d("ChaptersAdapter: ", e.getMessage(), e);
             }
