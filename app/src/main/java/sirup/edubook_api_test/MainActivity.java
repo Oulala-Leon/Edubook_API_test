@@ -37,9 +37,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
 
-        //set Lessons
-        //fragmentTransaction.add(R.id.Lessons_Fragment, cf);
-        //fragmentTransaction.commit();
 
         //set Templates
         /*TemplatesFragment tf = (TemplatesFragment) fm.findFragmentById(R.id.templates);

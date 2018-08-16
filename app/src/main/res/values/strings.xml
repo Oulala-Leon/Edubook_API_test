@@ -3,4 +3,5 @@
     <string name="book_title">Sciences de la Vie et de la Terre 4ème</string>
     <string name="return_button">return to start</string>
     <string name="fragment">reading fragment</string>
+    <string name="temp_chapters">Chapter Title - temp</string>
 </resources>

@@ -1,8 +1,6 @@
 package sirup.edubook_api_test;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,21 +20,21 @@ import org.json.JSONObject;
 
 import static com.android.volley.VolleyLog.TAG;
 
-public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHolder> {
-    private JSONArray chaptersArray;
+public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHolder> {
+
+    private JSONArray lessonsArray;
     private RecyclerView recyclerView;
 
-    public ChaptersAdapter() {
-        String bookUrl = "https://api.lelivrescolaire.fr/public/books/1339497/chapters";
+    public LessonsAdapter(String lesson) {
         Response.Listener<JSONArray> response = new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 Log.d(TAG, "response :" + response);
-                chaptersArray = response;
+                lessonsArray = response;
                 notifyDataSetChanged();
             }
         };
-        myHttpRequest.queryJSONArray(bookUrl, response);
+        myHttpRequest.queryJSONArray(lesson, response);
     }
 
     @Override
@@ -48,16 +46,16 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        if (chaptersArray == null)
+        if (lessonsArray == null)
             return 0;
         else
-            return chaptersArray.length();
+            return lessonsArray.length();
     }
 
     private JSONObject getItem(int position) {
-        if (chaptersArray == null) return null;
+        if (lessonsArray == null) return null;
         else
-            return chaptersArray.optJSONObject(position);
+            return lessonsArray.optJSONObject(position);
     }
 
     @Override
@@ -68,17 +66,18 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
 
     @Override
     @NonNull
-    public ChaptersAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
+    public LessonsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View chaptersView = inflater.inflate(R.layout.chapterslist_row, parent, false);
-        return new ViewHolder(chaptersView);
+        View lessonsView = inflater.inflate(R.layout.lessonslist_row, parent, false);
+        return new LessonsAdapter.ViewHolder(lessonsView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder VH, int position) {
+    public void onBindViewHolder(@NonNull LessonsAdapter.ViewHolder VH, int position) {
 
         final TextView text = VH.lessonTitle;
+        final TextView type = VH.lessonType;
         final ImageView imageView = VH.lessonImage;
 
         JSONObject json_data = getItem(position);
@@ -88,6 +87,8 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
             try {
                 String title = json_data.getString("title");
                 text.setText(title);
+                String lessonType = json_data.getString("type");
+                type.setText(lessonType);
                 String url = json_data.getString("url");
                 imageLoader.get(url, new ImageLoader.ImageListener() {
                     @Override
@@ -110,20 +111,18 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
                 /*
                 else setOnClickListener()
                 {
-                    //set Lessons
-                    //fragmentTransaction.add(R.id.Lessons_Fragment, cf);
-                    //fragmentTransaction.commit();
+
                 }
                  */
-                //myHttpRequest.queryImage(url, image);
             } catch (JSONException e) {
-                Log.d("ChaptersAdapter: ", e.getMessage(), e);
+                Log.d("LessonsAdapter: ", e.getMessage(), e);
             }
         }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView lessonTitle;
+        TextView lessonType;
         ImageView lessonImage;
 
         private Context context;
@@ -131,8 +130,9 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
         public ViewHolder(View itemView) {
             super(itemView);
             context = itemView.getContext();
-            lessonTitle = itemView.findViewById(R.id.chapter_title);
-            lessonImage = itemView.findViewById(R.id.chapter_image);
+            lessonTitle = itemView.findViewById(R.id.lesson_title);
+            lessonImage = itemView.findViewById(R.id.lesson_image);
+            lessonType = itemView.findViewById(R.id.lesson_type);
         }
     }
 }

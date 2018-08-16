@@ -42,7 +42,6 @@ public class myHttpRequest extends Volley {
                 cache.put(url, bitmap);
             }
         });
-
     }
 
     public static synchronized myHttpRequest getInstance(Context context) {
