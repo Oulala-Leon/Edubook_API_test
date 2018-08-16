@@ -6,23 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button android:id="@+id/test_button"
+    <TextView
+        android:id="@+id/Book_Title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView android:id="@+id/Book_Title"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="75dp"
+        android:text="@string/book_title"
+        android:textAlignment="center"
+        android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@id/Chapters_List"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textSize="30sp"
-        android:textAlignment="center"
-        android:text="@string/book_title"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <ListView android:id="@+id/Chapters_List"
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/Chapters_List"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
