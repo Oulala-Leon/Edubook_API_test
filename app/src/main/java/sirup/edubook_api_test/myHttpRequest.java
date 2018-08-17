@@ -17,6 +17,8 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 
@@ -74,13 +76,9 @@ public class myHttpRequest extends Volley {
         queue.add(jsonArrayRequest);
     }
 
-    /*public static synchronized void queryImage(final String url, Response.
-            Listener<Bitmap> response) {
-
-        ImageRequest imageRequest = new ImageRequest(url, response,
-                100, 100, null, null);
-        queue.add(imageRequest);
-    }*/
+    public static synchronized void queryImage(final Context activityContext, final String url, final ImageView imageView, final int width, final int height, final Callback callback) {
+        Picasso.with(activityContext).load(url).error(R.mipmap.ic_launcher).resize(width, height).into(imageView, callback);
+    }
 
     public static synchronized RequestQueue getRequestQueue() {
         return queue;

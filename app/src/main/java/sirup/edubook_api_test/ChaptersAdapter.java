@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.squareup.picasso.Callback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,9 +41,8 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
-
         this.recyclerView = recyclerView;
     }
 
@@ -54,10 +54,14 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
             return chaptersArray.length();
     }
 
-    private JSONObject getItem(int position) {
+    public JSONObject getItem(int position) {
         if (chaptersArray == null) return null;
         else
             return chaptersArray.optJSONObject(position);
+    }
+
+    public ViewHolder getViewHolder(int position) {
+        return (ViewHolder) (recyclerView.getChildViewHolder(recyclerView.getChildAt(position)));
     }
 
     @Override
@@ -76,50 +80,9 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder VH, int position) {
-
+    public void onBindViewHolder(@NonNull final ViewHolder VH, int position) {
         final TextView text = VH.lessonTitle;
         final ImageView imageView = VH.lessonImage;
-
-        JSONObject json_data = getItem(position);
-        ImageLoader imageLoader = myHttpRequest.getInstance().getImageLoader();
-
-        if (null != json_data) {
-            try {
-                String title = json_data.getString("title");
-                text.setText(title);
-                String url = json_data.getString("url");
-                imageLoader.get(url, new ImageLoader.ImageListener() {
-                    @Override
-                    public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                        Log.d(TAG, "response :" + response);
-                        imageView.setImageBitmap(response.getBitmap());
-                        notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "VolleyError :" + error.toString());
-                    }
-                }, 100, 100);
-                boolean valid = json_data.getBoolean("valid");
-                if (!valid) {
-                    VH.itemView.setBackgroundColor(0xFF555555);
-                    //recyclerView.findViewHolderForAdapterPosition(position);
-                }
-                /*
-                else setOnClickListener()
-                {
-                    //set Lessons
-                    //fragmentTransaction.add(R.id.Lessons_Fragment, cf);
-                    //fragmentTransaction.commit();
-                }
-                 */
-                //myHttpRequest.queryImage(url, image);
-            } catch (JSONException e) {
-                Log.d("ChaptersAdapter: ", e.getMessage(), e);
-            }
-        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
