@@ -77,7 +77,11 @@ public class myHttpRequest extends Volley {
     }
 
     public static synchronized void queryImage(final Context activityContext, final String url, final ImageView imageView, final int width, final int height, final Callback callback) {
-        Picasso.with(activityContext).load(url).error(R.mipmap.ic_launcher).resize(width, height).into(imageView, callback);
+        Picasso.with(activityContext).load(url)
+                .error(R.mipmap.ic_launcher)
+                .resize(width, height)
+                .placeholder(R.drawable.loadspinner)
+                .into(imageView, callback);
     }
 
     public static synchronized RequestQueue getRequestQueue() {
