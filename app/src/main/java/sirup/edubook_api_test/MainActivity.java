@@ -5,12 +5,8 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.widget.LinearLayout;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -29,8 +25,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.add(R.id.Chapters_Fragment, cf);
         fragmentTransaction.commit();
 
-        ChaptersHandler chaptersHandler = new ChaptersHandler(activity);
-        chaptersHandler.queryChapters();
+        ChaptersRequest chaptersRequest = new ChaptersRequest(activity);
         /*RecyclerView recyclerView = findViewById(R.id.Chapters_List);
         recyclerView.setAdapter(new ChaptersAdapter());
         LinearLayoutManager manager = new LinearLayoutManager(this);

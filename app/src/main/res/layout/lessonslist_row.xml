@@ -24,7 +24,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/lesson_type"/>
 
-    <com.android.volley.toolbox.NetworkImageView
+    <ImageView
         android:id="@+id/lesson_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

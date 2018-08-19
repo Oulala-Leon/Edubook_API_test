@@ -26,6 +26,7 @@ import static com.android.volley.VolleyLog.TAG;
 public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHolder> {
     private JSONArray chaptersArray;
     private RecyclerView recyclerView;
+    private static int testpos = 0;
 
     public ChaptersAdapter() {
         String bookUrl = "https://api.lelivrescolaire.fr/public/books/1339497/chapters";
@@ -34,10 +35,16 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
             public void onResponse(JSONArray response) {
                 Log.d(TAG, "response :" + response);
                 chaptersArray = response;
+                Log.d("Adapter: ", "Array Filled");
                 notifyDataSetChanged();
             }
         };
         myHttpRequest.queryJSONArray(bookUrl, response);
+    }
+
+    public ChaptersAdapter(JSONArray chaptersArray) {
+        if (chaptersArray != null)
+            this.chaptersArray = chaptersArray;
     }
 
     @Override
@@ -83,7 +90,46 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
     public void onBindViewHolder(@NonNull final ViewHolder VH, int position) {
         final TextView text = VH.lessonTitle;
         final ImageView imageView = VH.lessonImage;
+
+        JSONObject json_data = getItem(position);
+        Log.d("onBindViewHolder: ", "At JSONDATA");
+        if (null != json_data) {
+            try {
+                String title = json_data.getString("title");
+                text.setText(title);
+                Log.d("ViewHolder: ", "At TITLE");
+                String url = json_data.getString("url");
+                myHttpRequest.queryImage(VH.itemView.getContext(), url, imageView, 1100, 1100, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        Log.d(TAG, "image was properly downloaded");
+                    }
+                    @Override
+                    public void onError() {
+                        Log.d(TAG, "image download had an error in Picasso");
+                    }
+                });
+
+                boolean valid = json_data.getBoolean("valid");
+                if (!valid) {
+                    VH.itemView.setBackgroundColor(0xFF555555);
+                    //recyclerView.findViewHolderForAdapterPosition(position);
+                }
+                                /*
+                else setOnClickListener()
+                {
+                    //set Lessons
+                    LessonsFragment lessonsFragment = new LessonsFragment(String item_title);
+                    //fragmentTransaction.add(R.id.Lessons_Fragment, lessonsFragment);
+                    //fragmentTransaction.commit();
+                }
+                 */
+            } catch (JSONException e) {
+                Log.d("ChaptersAdapter: ", e.getMessage(), e);
+            }
+        }
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView lessonTitle;
@@ -93,9 +139,14 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
 
         public ViewHolder(View itemView) {
             super(itemView);
+            Log.d("ViewHolder: ", "Being Constructed");
             context = itemView.getContext();
             lessonTitle = itemView.findViewById(R.id.chapter_title);
             lessonImage = itemView.findViewById(R.id.chapter_image);
+
+            //JSONObject json_data = getItem(testpos++);
+            Log.d("merdepos ", "" + (getAdapterPosition() + 1));
+
         }
     }
 }

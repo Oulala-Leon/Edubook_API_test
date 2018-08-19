@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.squareup.picasso.Callback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -80,44 +81,6 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
         final TextView type = VH.lessonType;
         final ImageView imageView = VH.lessonImage;
 
-        JSONObject json_data = getItem(position);
-        ImageLoader imageLoader = myHttpRequest.getInstance().getImageLoader();
-
-        if (null != json_data) {
-            try {
-                String title = json_data.getString("title");
-                text.setText(title);
-                String lessonType = json_data.getString("type");
-                type.setText(lessonType);
-                String url = json_data.getString("url");
-                imageLoader.get(url, new ImageLoader.ImageListener() {
-                    @Override
-                    public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                        Log.d(TAG, "response :" + response);
-                        imageView.setImageBitmap(response.getBitmap());
-                        notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "VolleyError :" + error.toString());
-                    }
-                }, 100, 100);
-                boolean valid = json_data.getBoolean("valid");
-                if (!valid) {
-                    VH.itemView.setBackgroundColor(0xFF555555);
-                    //recyclerView.findViewHolderForAdapterPosition(position);
-                }
-                /*
-                else setOnClickListener()
-                {
-
-                }
-                 */
-            } catch (JSONException e) {
-                Log.d("LessonsAdapter: ", e.getMessage(), e);
-            }
-        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -125,14 +88,49 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
         TextView lessonType;
         ImageView lessonImage;
 
-        private Context context;
-
         public ViewHolder(View itemView) {
             super(itemView);
-            context = itemView.getContext();
             lessonTitle = itemView.findViewById(R.id.lesson_title);
             lessonImage = itemView.findViewById(R.id.lesson_image);
             lessonType = itemView.findViewById(R.id.lesson_type);
+
+
+            JSONObject json_data = getItem(getAdapterPosition());
+
+            if (null != json_data) {
+                try {
+                    String title = json_data.getString("title");
+                    lessonTitle.setText(title);
+                    String type = json_data.getString("type");
+                    lessonType.setText(type);
+                    String url = json_data.getString("url");
+                    myHttpRequest.queryImage(itemView.getContext(), url, lessonImage, 100, 100, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            Log.d(TAG, "image was properly downloaded");
+                        }
+
+                        @Override
+                        public void onError() {
+                            Log.d(TAG, "image download had an error in Picasso");
+                        }
+                    });
+
+                    boolean valid = json_data.getBoolean("valid");
+                    if (!valid) {
+                        itemView.setBackgroundColor(0xFF555555);
+                        //recyclerView.findViewHolderForAdapterPosition(position);
+                    }
+                /*
+                else setOnClickListener()
+                {
+
+                }
+                 */
+                } catch (JSONException e) {
+                    Log.d("LessonsAdapter: ", e.getMessage(), e);
+                }
+            }
         }
     }
 }
