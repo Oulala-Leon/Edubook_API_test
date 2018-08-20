@@ -21,8 +21,7 @@ import static com.android.volley.VolleyLog.TAG;
 
 public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHolder> {
     private JSONArray chaptersArray;
-    private RecyclerView recyclerView;
-    private MainActivity mainActivity;
+    private final MainActivity mainActivity;
 
     public ChaptersAdapter(JSONArray chaptersArray, MainActivity mainActivity) {
         if (chaptersArray != null)
@@ -33,23 +32,15 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
-        this.recyclerView = recyclerView;
     }
 
     @Override
     public int getItemCount() {
-        if (chaptersArray == null)
-            return 0;
-        else
-            return chaptersArray.length();
+        return chaptersArray.length();
     }
 
-    public JSONObject getItem(int position) {
+    private JSONObject getItem(int position) {
         return chaptersArray.optJSONObject(position);
-    }
-
-    public ViewHolder getViewHolder(int position) {
-        return (ViewHolder) (recyclerView.getChildViewHolder(recyclerView.getChildAt(position)));
     }
 
     @Override
@@ -78,11 +69,11 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
                 VH.ID = json_data.getInt("ID");
                 String title = json_data.getString("title");
                 text.setText(title);
-                String url = json_data.getString("url");
+                final String url = json_data.getString("url");
                 myHttpRequest.queryImage(VH.itemView.getContext(), url, imageView, 1000, 1000, new Callback() {
                     @Override
                     public void onSuccess() {
-
+                        Log.d(TAG, "image " + url + " has been downloaded.");
                     }
 
                     @Override
@@ -119,13 +110,7 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
         @Override
         public void onClick(final View itemView) {
             Log.d("clickety", "click");
-            String api_root = "https://api.lelivrescolaire.fr/public/chapters/";
-            myHttpRequest.queryJSONArray(api_root + ID + "/lessons", new Response.Listener<JSONArray>() {
-                @Override
-                public void onResponse(JSONArray response) {
-                    mainActivity.toLessonsFragment(response);
-                }
-            });
+            mainActivity.toLessonsFragment("" + ID);
         }
     }
 }

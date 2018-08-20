@@ -34,17 +34,16 @@ public class MainActivity extends AppCompatActivity {
         //fragmentTransaction.show(chaptersFragment);
         fragmentTransaction.commit();
 
-        new ChaptersRequest(this);
+        new ChaptersRequest(this).queryChapters(this);
     }
 
-    public void toLessonsFragment(JSONArray response) {
+    public void toLessonsFragment(String lessonsURL) {
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.hide(chaptersFragment);
         fragmentTransaction.show(lessonsFragment);
         fragmentTransaction.commit();
-        new LessonsRequest(this);
-
+        new LessonsRequest(this).queryLessons(lessonsURL);
     }
 
     @Override

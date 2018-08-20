@@ -24,23 +24,18 @@ import static com.android.volley.VolleyLog.TAG;
 public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHolder> {
 
     private JSONArray lessonsArray;
-    private RecyclerView recyclerView;
 
     public LessonsAdapter(JSONArray lessons) {
         lessonsArray = lessons;
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
-        this.recyclerView = recyclerView;
     }
 
     @Override
     public int getItemCount() {
-        if (lessonsArray == null)
-            return 0;
-        else
             return lessonsArray.length();
     }
 
@@ -67,7 +62,7 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
     public void onBindViewHolder(@NonNull LessonsAdapter.ViewHolder VH, int position) {
 
         final TextView text = VH.lessonTitle;
-        final TextView typeview = VH.lessonType;
+        final TextView typeView = VH.lessonType;
         final ImageView imageView = VH.lessonImage;
 
         JSONObject json_data = getItem(position);
@@ -77,7 +72,7 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
                 String title = json_data.getString("title");
                 text.setText(title);
                 String type = json_data.getString("type");
-                typeview.setText(type);
+                typeView.setText(type);
                 String url = json_data.getString("url");
                 myHttpRequest.queryImage(VH.itemView.getContext(), url, imageView, 1000, 1000, new Callback() {
                     @Override

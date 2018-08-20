@@ -5,6 +5,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 
@@ -17,24 +18,31 @@ public class ChaptersRequest extends android.os.Handler {
     private MainActivity mainActivity;
 
     ChaptersRequest(MainActivity mainActivity) {
-        queryChapters(mainActivity);    //possibly will only work with activity, but should function fine
         this.mainActivity = mainActivity;
-
     }
 
+    /*
+        Requests the JSONArray for the chapters
+        On Response, constructs the chapters RecyclerView
+        Sets the Chapters Adapter
+     */
     public void queryChapters(final Activity activity) {
         String bookUrl = "https://api.lelivrescolaire.fr/public/books/1339497/chapters";
         Response.Listener<JSONArray> response = new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                Log.d(TAG, "response :" + response);
+                if (response.length() > 0) {
+                    Log.d(TAG, "response :" + response);
 
-                recyclerView = activity.findViewById(R.id.Chapters_List);
-                LinearLayoutManager manager = new LinearLayoutManager(activity);
-                recyclerView.setLayoutManager(manager);
-                recyclerView.setAdapter(new ChaptersAdapter(response, mainActivity));
-                recyclerView.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
-                recyclerView.setHasFixedSize(true);
+                    recyclerView = activity.findViewById(R.id.Chapters_List);
+                    LinearLayoutManager manager = new LinearLayoutManager(activity);
+                    recyclerView.setLayoutManager(manager);
+                    recyclerView.setAdapter(new ChaptersAdapter(response, mainActivity));
+                    recyclerView.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
+                    recyclerView.setHasFixedSize(true);
+                } else {
+                    Toast.makeText(mainActivity, "No chapters could be found.", Toast.LENGTH_LONG).show();
+                }
             }
         };
         myHttpRequest.queryJSONArray(bookUrl, response);
