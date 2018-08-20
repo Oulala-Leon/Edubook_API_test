@@ -16,9 +16,10 @@ public class ChaptersRequest extends android.os.Handler {
     private RecyclerView recyclerView;
     private MainActivity mainActivity;
 
-    ChaptersRequest(Activity activity, MainActivity mainActivity) {
-        queryChapters(activity);
+    ChaptersRequest(MainActivity mainActivity) {
+        queryChapters(mainActivity);    //possibly will only work with activity, but should function fine
         this.mainActivity = mainActivity;
+
     }
 
     public void queryChapters(final Activity activity) {

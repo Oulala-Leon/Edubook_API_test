@@ -27,29 +27,14 @@ import static com.android.volley.VolleyLog.TAG;
 public class myHttpRequest extends Volley {
     private static myHttpRequest instance = null;
     private static RequestQueue queue;
-    private ImageLoader imageLoader;
-    private static Context context;
 
     private myHttpRequest(Context context) {
         queue = Volley.newRequestQueue(context);
-        imageLoader = new ImageLoader(queue, new ImageLoader.ImageCache() {
-            private final LruCache<String, Bitmap> cache =
-                    new LruCache<String, Bitmap>(50);
-            @Override
-            public Bitmap getBitmap(String url) {
-                return cache.get(url);
-            }
-            @Override
-            public void putBitmap(String url, Bitmap bitmap) {
-                cache.put(url, bitmap);
-            }
-        });
     }
 
     public static synchronized myHttpRequest getInstance(Context context) {
         if (instance == null)
             instance = new myHttpRequest(context);
-        myHttpRequest.context = context;
         return instance;
     }
 
@@ -69,10 +54,8 @@ public class myHttpRequest extends Volley {
                 VolleyLog.d(TAG, "Error, YOU HAVE NO INTERNET FOOL! :" + error.getMessage());
             }
         };
-
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 response, error);
-
         queue.add(jsonArrayRequest);
     }
 
@@ -91,10 +74,6 @@ public class myHttpRequest extends Volley {
     public <T> void addToRequestQueue(Request<T> req, String tag) {
         req.setTag(tag);
         getRequestQueue().add(req);
-    }
-
-    public ImageLoader getImageLoader() {
-        return imageLoader;
     }
 
     public void cancelPendingRequests(Object tag) {

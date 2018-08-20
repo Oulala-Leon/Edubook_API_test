@@ -14,7 +14,6 @@ import org.json.JSONArray;
 
 
 public class MainActivity extends AppCompatActivity {
-    private Activity activity;
     private ChaptersFragment chaptersFragment;
     private LessonsFragment lessonsFragment;
 
@@ -22,8 +21,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        activity = this;
-        myHttpRequest.getInstance(activity);
+        myHttpRequest.getInstance(this);
 
         FragmentManager fm = getFragmentManager();
         chaptersFragment = new ChaptersFragment();
@@ -31,11 +29,12 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.add(R.id.Lessons_Fragment, lessonsFragment);
         fragmentTransaction.add(R.id.Chapters_Fragment, chaptersFragment);
+        fragmentTransaction.setPrimaryNavigationFragment(chaptersFragment);
         fragmentTransaction.hide(lessonsFragment);
-        fragmentTransaction.show(chaptersFragment);
+        //fragmentTransaction.show(chaptersFragment);
         fragmentTransaction.commit();
 
-        new ChaptersRequest(activity, this);
+        new ChaptersRequest(this);
     }
 
     public void toLessonsFragment(JSONArray response) {
@@ -44,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.hide(chaptersFragment);
         fragmentTransaction.show(lessonsFragment);
         fragmentTransaction.commit();
-        new LessonsRequest(activity, this);
+        new LessonsRequest(this);
 
     }
 

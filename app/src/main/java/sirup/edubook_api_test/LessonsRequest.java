@@ -15,12 +15,11 @@ import java.util.ArrayList;
 import static com.android.volley.VolleyLog.TAG;
 
 public class LessonsRequest {
-    private Activity activity;
     private MainActivity mainActivity;
     private RecyclerView recyclerView;
 
-    LessonsRequest(Activity activity, MainActivity mainActivity) {
-        this.activity = activity;
+    LessonsRequest(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
     }
 
     public void queryLessons(String chapterID) {
@@ -29,11 +28,11 @@ public class LessonsRequest {
             @Override
             public void onResponse(JSONArray response) {
                 Log.d(TAG, "response :" + response);
-                recyclerView = activity.findViewById(R.id.Lesson_List);
-                LinearLayoutManager manager = new LinearLayoutManager(activity);
+                recyclerView = mainActivity.findViewById(R.id.Lesson_List);
+                LinearLayoutManager manager = new LinearLayoutManager(mainActivity);
                 recyclerView.setLayoutManager(manager);
                 recyclerView.setAdapter(new LessonsAdapter(response));
-                recyclerView.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
+                recyclerView.addItemDecoration(new DividerItemDecoration(mainActivity, DividerItemDecoration.VERTICAL));
                 recyclerView.setHasFixedSize(true);
             }
         };
