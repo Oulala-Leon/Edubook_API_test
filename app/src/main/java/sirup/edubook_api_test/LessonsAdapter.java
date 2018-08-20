@@ -26,21 +26,13 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
     private JSONArray lessonsArray;
     private RecyclerView recyclerView;
 
-    public LessonsAdapter(String lessons) {
-        Response.Listener<JSONArray> response = new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                Log.d(TAG, "response :" + response);
-                lessonsArray = response;
-            }
-        };
-        myHttpRequest.queryJSONArray(lessons, response);
+    public LessonsAdapter(JSONArray lessons) {
+        lessonsArray = lessons;
     }
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
-
         this.recyclerView = recyclerView;
     }
 
@@ -87,7 +79,7 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
                 String type = json_data.getString("type");
                 typeview.setText(type);
                 String url = json_data.getString("url");
-                myHttpRequest.queryImage(VH.itemView.getContext(), url, imageView, 1100, 1100, new Callback() {
+                myHttpRequest.queryImage(VH.itemView.getContext(), url, imageView, 1000, 1000, new Callback() {
                     @Override
                     public void onSuccess() {
                         Log.d(TAG, "image was properly downloaded");
@@ -105,12 +97,6 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
                 } else {
                     VH.itemView.setBackgroundColor(0xFFFFFFFF);
                 }
-                /*
-                else setOnClickListener()
-                {
-
-                }
-                 */
             } catch (JSONException e) {
                 Log.d("LessonsAdapter: ", e.getMessage(), e);
             }

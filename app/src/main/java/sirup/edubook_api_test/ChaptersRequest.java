@@ -14,10 +14,11 @@ import static com.android.volley.VolleyLog.TAG;
 
 public class ChaptersRequest extends android.os.Handler {
     private RecyclerView recyclerView;
-    private LessonsRequest lessonsRequest;
+    private MainActivity mainActivity;
 
-    ChaptersRequest(Activity activity) {
+    ChaptersRequest(Activity activity, MainActivity mainActivity) {
         queryChapters(activity);
+        this.mainActivity = mainActivity;
     }
 
     public void queryChapters(final Activity activity) {
@@ -30,15 +31,11 @@ public class ChaptersRequest extends android.os.Handler {
                 recyclerView = activity.findViewById(R.id.Chapters_List);
                 LinearLayoutManager manager = new LinearLayoutManager(activity);
                 recyclerView.setLayoutManager(manager);
-                recyclerView.setAdapter(new ChaptersAdapter(response, activity));
+                recyclerView.setAdapter(new ChaptersAdapter(response, mainActivity));
                 recyclerView.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
                 recyclerView.setHasFixedSize(true);
             }
         };
         myHttpRequest.queryJSONArray(bookUrl, response);
-    }
-
-    public void setLessonRequest() {
-
     }
 }

@@ -1,6 +1,5 @@
 package sirup.edubook_api_test;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -18,17 +17,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 import static com.android.volley.VolleyLog.TAG;
 
-public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHolder>{
+public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHolder> {
     private JSONArray chaptersArray;
     private RecyclerView recyclerView;
+    private MainActivity mainActivity;
 
-    public ChaptersAdapter(JSONArray chaptersArray, Activity activity) {
+    public ChaptersAdapter(JSONArray chaptersArray, MainActivity mainActivity) {
         if (chaptersArray != null)
             this.chaptersArray = chaptersArray;
+        this.mainActivity = mainActivity;
     }
 
     @Override
@@ -51,10 +50,6 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
 
     public ViewHolder getViewHolder(int position) {
         return (ViewHolder) (recyclerView.getChildViewHolder(recyclerView.getChildAt(position)));
-    }
-
-    public LessonsRequest getLessonsRequest() {
-        return lessonsRequest;
     }
 
     @Override
@@ -80,32 +75,26 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
         JSONObject json_data = getItem(position);
         if (null != json_data) {
             try {
+                VH.ID = json_data.getInt("ID");
                 String title = json_data.getString("title");
                 text.setText(title);
                 String url = json_data.getString("url");
-                myHttpRequest.queryImage(VH.itemView.getContext(), url, imageView, 1100, 1100, new Callback() {
+                myHttpRequest.queryImage(VH.itemView.getContext(), url, imageView, 1000, 1000, new Callback() {
                     @Override
                     public void onSuccess() {
 
                     }
+
                     @Override
                     public void onError() {
                         Log.d(TAG, "image download had an error in Picasso");
                     }
                 });
-
                 boolean valid = json_data.getBoolean("valid");
                 if (!valid) {
                     VH.itemView.setBackgroundColor(0xFF555555);
                 } else {
                     VH.itemView.setBackgroundColor(0xFFFFFFFF);
-                    /*new onClickListener()
-                    {
-                        //set Lessons
-                        LessonsFragment lessonsFragment = new LessonsFragment(String item_title);
-                        //fragmentTransaction.add(R.id.Lessons_Fragment, lessonsFragment);
-                        //fragmentTransaction.commit();
-                    }*/
                 }
             } catch (JSONException e) {
                 Log.d("ChaptersAdapter: ", e.getMessage(), e);
@@ -115,9 +104,10 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
 
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView lessonTitle;
         ImageView lessonImage;
+        int ID;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -128,29 +118,14 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
 
         @Override
         public void onClick(final View itemView) {
-            Log.d("clickety","click");
-            final ArrayList<JSONArray> jsonArrays = new ArrayList<>();
-            try {
-                final String[] lessons = getItem(getAdapterPosition()).get("lessons").toString().split(",");
-                String api_root = "https://api.lelivrescolaire.fr/public/chapters/";
-                for (int i = 0; i == lessons.length; i++) {
-                    String str = api_root;
-                    str = str.concat(lessons[i]);
-                    str = str.concat("/lessons");
-                    myHttpRequest.queryJSONArray(str, new Response.Listener<JSONArray>() {
-                        @Override
-                        public void onResponse(JSONArray response) {
-                            jsonArrays.add(response);
-                            if (jsonArrays.size() == lessons.length) {
-                                lessonsRequest.queryLessons(jsonArrays);
-                            }
-                        }
-                    });
+            Log.d("clickety", "click");
+            String api_root = "https://api.lelivrescolaire.fr/public/chapters/";
+            myHttpRequest.queryJSONArray(api_root + ID + "/lessons", new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    mainActivity.toLessonsFragment(response);
                 }
-            } catch (JSONException e){
-                Log.d("ChaptersAdapter: ", e.getMessage(), e);
-            }
+            });
         }
-
     }
 }
