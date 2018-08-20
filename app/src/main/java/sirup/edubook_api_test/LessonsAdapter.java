@@ -32,7 +32,6 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
             public void onResponse(JSONArray response) {
                 Log.d(TAG, "response :" + response);
                 lessonsArray = response;
-                notifyDataSetChanged();
             }
         };
         myHttpRequest.queryJSONArray(lesson, response);
@@ -54,8 +53,6 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
     }
 
     private JSONObject getItem(int position) {
-        if (lessonsArray == null) return null;
-        else
             return lessonsArray.optJSONObject(position);
     }
 
@@ -78,8 +75,46 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
     public void onBindViewHolder(@NonNull LessonsAdapter.ViewHolder VH, int position) {
 
         final TextView text = VH.lessonTitle;
-        final TextView type = VH.lessonType;
+        final TextView typeview = VH.lessonType;
         final ImageView imageView = VH.lessonImage;
+
+        JSONObject json_data = getItem(position);
+
+        if (null != json_data) {
+            try {
+                String title = json_data.getString("title");
+                text.setText(title);
+                String type = json_data.getString("type");
+                typeview.setText(type);
+                String url = json_data.getString("url");
+                myHttpRequest.queryImage(VH.itemView.getContext(), url, imageView, 1100, 1100, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        Log.d(TAG, "image was properly downloaded");
+                    }
+
+                    @Override
+                    public void onError() {
+                        Log.d(TAG, "image download had an error in Picasso");
+                    }
+                });
+
+                boolean valid = json_data.getBoolean("valid");
+                if (!valid) {
+                    VH.itemView.setBackgroundColor(0xFF555555);
+                } else {
+                    VH.itemView.setBackgroundColor(0xFFFFFFFF);
+                }
+                /*
+                else setOnClickListener()
+                {
+
+                }
+                 */
+            } catch (JSONException e) {
+                Log.d("LessonsAdapter: ", e.getMessage(), e);
+            }
+        }
 
     }
 
@@ -94,43 +129,6 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
             lessonImage = itemView.findViewById(R.id.lesson_image);
             lessonType = itemView.findViewById(R.id.lesson_type);
 
-
-            JSONObject json_data = getItem(getAdapterPosition());
-
-            if (null != json_data) {
-                try {
-                    String title = json_data.getString("title");
-                    lessonTitle.setText(title);
-                    String type = json_data.getString("type");
-                    lessonType.setText(type);
-                    String url = json_data.getString("url");
-                    myHttpRequest.queryImage(itemView.getContext(), url, lessonImage, 100, 100, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            Log.d(TAG, "image was properly downloaded");
-                        }
-
-                        @Override
-                        public void onError() {
-                            Log.d(TAG, "image download had an error in Picasso");
-                        }
-                    });
-
-                    boolean valid = json_data.getBoolean("valid");
-                    if (!valid) {
-                        itemView.setBackgroundColor(0xFF555555);
-                        //recyclerView.findViewHolderForAdapterPosition(position);
-                    }
-                /*
-                else setOnClickListener()
-                {
-
-                }
-                 */
-                } catch (JSONException e) {
-                    Log.d("LessonsAdapter: ", e.getMessage(), e);
-                }
-            }
         }
     }
 }

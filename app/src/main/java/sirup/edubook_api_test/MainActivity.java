@@ -25,16 +25,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.add(R.id.Chapters_Fragment, cf);
         fragmentTransaction.commit();
 
-        ChaptersRequest chaptersRequest = new ChaptersRequest(activity);
-        /*RecyclerView recyclerView = findViewById(R.id.Chapters_List);
-        recyclerView.setAdapter(new ChaptersAdapter());
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        manager.setOrientation(LinearLayout.VERTICAL);
-        recyclerView.setLayoutManager(manager);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-
+        new ChaptersRequest(activity);
 
         //set Templates
         /*TemplatesFragment tf = (TemplatesFragment) fm.findFragmentById(R.id.templates);
