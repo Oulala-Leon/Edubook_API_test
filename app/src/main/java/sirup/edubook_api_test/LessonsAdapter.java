@@ -26,7 +26,7 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
     private JSONArray lessonsArray;
     private RecyclerView recyclerView;
 
-    public LessonsAdapter(String lesson) {
+    public LessonsAdapter(String lessons) {
         Response.Listener<JSONArray> response = new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -34,7 +34,7 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
                 lessonsArray = response;
             }
         };
-        myHttpRequest.queryJSONArray(lesson, response);
+        myHttpRequest.queryJSONArray(lessons, response);
     }
 
     @Override

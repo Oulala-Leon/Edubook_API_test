@@ -2,7 +2,6 @@ package sirup.edubook_api_test;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,8 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
 import com.squareup.picasso.Callback;
 
 import org.json.JSONArray;
@@ -28,23 +25,8 @@ import static com.android.volley.VolleyLog.TAG;
 public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHolder>{
     private JSONArray chaptersArray;
     private RecyclerView recyclerView;
-    private static int testpos = 0;
 
-    public ChaptersAdapter() {
-        String bookUrl = "https://api.lelivrescolaire.fr/public/books/1339497/chapters";
-        Response.Listener<JSONArray> response = new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                Log.d(TAG, "response :" + response);
-                chaptersArray = response;
-                Log.d("Adapter: ", "Array Filled");
-                notifyDataSetChanged();
-            }
-        };
-        myHttpRequest.queryJSONArray(bookUrl, response);
-    }
-
-    public ChaptersAdapter(JSONArray chaptersArray) {
+    public ChaptersAdapter(JSONArray chaptersArray, Activity activity) {
         if (chaptersArray != null)
             this.chaptersArray = chaptersArray;
     }
@@ -69,6 +51,10 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
 
     public ViewHolder getViewHolder(int position) {
         return (ViewHolder) (recyclerView.getChildViewHolder(recyclerView.getChildAt(position)));
+    }
+
+    public LessonsRequest getLessonsRequest() {
+        return lessonsRequest;
     }
 
     @Override
@@ -141,7 +127,7 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
         }
 
         @Override
-        public void onClick(View itemView) {
+        public void onClick(final View itemView) {
             Log.d("clickety","click");
             final ArrayList<JSONArray> jsonArrays = new ArrayList<>();
             try {
@@ -156,7 +142,7 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
                         public void onResponse(JSONArray response) {
                             jsonArrays.add(response);
                             if (jsonArrays.size() == lessons.length) {
-                                //lessonsFragment
+                                lessonsRequest.queryLessons(jsonArrays);
                             }
                         }
                     });

@@ -26,12 +26,21 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
 
         new ChaptersRequest(activity);
+        new LessonsRequest(activity, this);
 
         //set Templates
         /*TemplatesFragment tf = (TemplatesFragment) fm.findFragmentById(R.id.templates);
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.add(R.id.templates, tf);
         //fragmentTransaction.commit();*/
+    }
+
+    public void toLessonsFragment() {
+        FragmentManager fm = getFragmentManager();
+        LessonsFragment lessonsFragment = new LessonsFragment();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.add(R.id.Lessons_Fragment, lessonsFragment);
+        fragmentTransaction.commit();
     }
 
     @Override

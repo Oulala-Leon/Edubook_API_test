@@ -12,5 +12,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"/>
+    <fragment
+        android:id="@+id/Lessons_Fragment"
+        android:name="sirup.edubook_api_test.ChaptersFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"/>
 
 </android.support.constraint.ConstraintLayout>
