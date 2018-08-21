@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.squareup.picasso.Callback;
 
 import org.json.JSONArray;
@@ -19,14 +21,12 @@ import org.json.JSONObject;
 
 import static com.android.volley.VolleyLog.TAG;
 
-public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHolder> {
-    private JSONArray chaptersArray;
-    private final MainActivity mainActivity;
+public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHolder> {
 
-    public ChaptersAdapter(JSONArray chaptersArray, MainActivity mainActivity) {
-        if (chaptersArray != null)
-            this.chaptersArray = chaptersArray;
-        this.mainActivity = mainActivity;
+    private JSONArray lessonsArray;
+
+    public LessonsAdapter(JSONArray lessons) {
+        lessonsArray = lessons;
     }
 
     @Override
@@ -36,11 +36,11 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return chaptersArray.length();
+            return lessonsArray.length();
     }
 
     private JSONObject getItem(int position) {
-        return chaptersArray.optJSONObject(position);
+            return lessonsArray.optJSONObject(position);
     }
 
     @Override
@@ -51,36 +51,31 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
 
     @Override
     @NonNull
-    public ChaptersAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
+    public LessonsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View chaptersView = inflater.inflate(R.layout.chapterslist_row, parent, false);
-        return new ViewHolder(chaptersView);
+        View lessonsView = inflater.inflate(R.layout.lessonslist_row, parent, false);
+        return new LessonsAdapter.ViewHolder(lessonsView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder VH, int position) {
+    public void onBindViewHolder(@NonNull LessonsAdapter.ViewHolder VH, int position) {
+
         final TextView text = VH.lessonTitle;
-        final ImageView imageView = VH.lessonImage;
+        final TextView typeView = VH.lessonType;
+        final TextView pageView = VH.lessonPage;
 
         JSONObject json_data = getItem(position);
+
         if (null != json_data) {
             try {
-                VH.ID = json_data.getInt("id");
                 String title = json_data.getString("title");
                 text.setText(title);
-                final String url = json_data.getString("url");
-                myHttpRequest.queryImage(VH.itemView.getContext(), url, imageView, 1000, 1000, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        Log.d(TAG, "image " + url + " has been downloaded.");
-                    }
-
-                    @Override
-                    public void onError() {
-                        Log.d(TAG, "image download had an error in Picasso");
-                    }
-                });
+                String type = json_data.getString("type");
+                type = type.replaceAll("\"", "");
+                typeView.setText(type);
+                String page =  "Page " + json_data.getInt("page");
+                pageView.setText(page);
                 boolean valid = json_data.getBoolean("valid");
                 if (!valid) {
                     VH.itemView.setBackgroundColor(0xFF555555);
@@ -88,29 +83,29 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
                     VH.itemView.setBackgroundColor(0xFFFFFFFF);
                 }
             } catch (JSONException e) {
-                Log.d("ChaptersAdapter: ", e.getMessage(), e);
+                Log.d("LessonsAdapter: ", e.getMessage(), e);
             }
-
         }
 
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView lessonTitle;
-        ImageView lessonImage;
-        int ID;
+        TextView lessonType;
+        TextView lessonPage;
 
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            lessonTitle = itemView.findViewById(R.id.chapter_title);
-            lessonImage = itemView.findViewById(R.id.chapter_image);
+            lessonTitle = itemView.findViewById(R.id.lesson_title);
+            lessonPage = itemView.findViewById(R.id.lesson_page);
+            lessonType = itemView.findViewById(R.id.lesson_type);
+
         }
 
         @Override
         public void onClick(final View itemView) {
             Log.d("clickety", "click");
-            mainActivity.toLessonsFragment("" + ID, lessonTitle.getText().toString());
         }
     }
 }

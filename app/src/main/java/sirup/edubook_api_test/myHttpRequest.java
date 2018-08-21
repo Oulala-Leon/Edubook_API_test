@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.LruCache;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -12,9 +13,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 
@@ -23,7 +27,6 @@ import static com.android.volley.VolleyLog.TAG;
 public class myHttpRequest extends Volley {
     private static myHttpRequest instance = null;
     private static RequestQueue queue;
-    private static Context context;
 
     private myHttpRequest(Context context) {
         queue = Volley.newRequestQueue(context);
@@ -32,7 +35,6 @@ public class myHttpRequest extends Volley {
     public static synchronized myHttpRequest getInstance(Context context) {
         if (instance == null)
             instance = new myHttpRequest(context);
-        myHttpRequest.context = context;
         return instance;
     }
 
@@ -52,19 +54,31 @@ public class myHttpRequest extends Volley {
                 VolleyLog.d(TAG, "Error, YOU HAVE NO INTERNET FOOL! :" + error.getMessage());
             }
         };
-
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 response, error);
-
         queue.add(jsonArrayRequest);
     }
 
+    public static synchronized void queryImage(final Context activityContext, final String url, final ImageView imageView, final int width, final int height, final Callback callback) {
+        Picasso.with(activityContext).load(url)
+                .error(R.mipmap.ic_launcher)
+                .resize(width, height)
+                .placeholder(R.drawable.loadspinner)
+                .into(imageView, callback);
+    }
 
-    public static synchronized void queryImage(final String url, Response.
-            Listener<Bitmap> response) {
+    public static synchronized RequestQueue getRequestQueue() {
+        return queue;
+    }
 
-        ImageRequest imageRequest = new ImageRequest(url,response,
-                 100, 100, null, null);
-        queue.add(imageRequest);
+    public <T> void addToRequestQueue(Request<T> req, String tag) {
+        req.setTag(tag);
+        getRequestQueue().add(req);
+    }
+
+    public void cancelPendingRequests(Object tag) {
+        if (queue != null) {
+            queue.cancelAll(tag);
+        }
     }
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MainActivity">
+
+    <fragment
+        android:id="@+id/Chapters_Fragment"
+        android:name="sirup.edubook_api_test.ChaptersFragment"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"/>
+    <fragment
+        android:id="@+id/Lessons_Fragment"
+        android:name="sirup.edubook_api_test.ChaptersFragment"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        app:layout_constraintLeft_toRightOf="@id/Chapters_Fragment"
+        android:orientation="vertical"/>
+
+</android.support.constraint.ConstraintLayout>
