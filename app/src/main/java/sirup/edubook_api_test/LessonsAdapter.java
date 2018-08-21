@@ -63,7 +63,7 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
 
         final TextView text = VH.lessonTitle;
         final TextView typeView = VH.lessonType;
-        final ImageView imageView = VH.lessonImage;
+        final TextView pageView = VH.lessonPage;
 
         JSONObject json_data = getItem(position);
 
@@ -72,20 +72,10 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
                 String title = json_data.getString("title");
                 text.setText(title);
                 String type = json_data.getString("type");
+                type = type.replaceAll("\"", "");
                 typeView.setText(type);
-                String url = json_data.getString("url");
-                myHttpRequest.queryImage(VH.itemView.getContext(), url, imageView, 1000, 1000, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        Log.d(TAG, "image was properly downloaded");
-                    }
-
-                    @Override
-                    public void onError() {
-                        Log.d(TAG, "image download had an error in Picasso");
-                    }
-                });
-
+                String page =  "Page " + json_data.getInt("page");
+                pageView.setText(page);
                 boolean valid = json_data.getBoolean("valid");
                 if (!valid) {
                     VH.itemView.setBackgroundColor(0xFF555555);
@@ -102,12 +92,12 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView lessonTitle;
         TextView lessonType;
-        ImageView lessonImage;
+        TextView lessonPage;
 
         public ViewHolder(View itemView) {
             super(itemView);
             lessonTitle = itemView.findViewById(R.id.lesson_title);
-            lessonImage = itemView.findViewById(R.id.lesson_image);
+            lessonPage = itemView.findViewById(R.id.lesson_page);
             lessonType = itemView.findViewById(R.id.lesson_type);
 
         }

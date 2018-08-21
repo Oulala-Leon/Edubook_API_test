@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.android.volley.Response;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import static com.android.volley.VolleyLog.TAG;
 
@@ -33,11 +34,18 @@ public class ChaptersRequest extends android.os.Handler {
             public void onResponse(JSONArray response) {
                 if (response.length() > 0) {
                     Log.d(TAG, "response :" + response);
-
+                    JSONArray uprightResponse = new JSONArray();
+                    try {
+                        for (int i = response.length() - 1; i >= 0; i--) {
+                            uprightResponse.put(response.get(i));
+                        }
+                    } catch (JSONException e) {
+                        Log.d("ChaptersAdapter: ", e.getMessage(), e);
+                    }
                     recyclerView = activity.findViewById(R.id.Chapters_List);
                     LinearLayoutManager manager = new LinearLayoutManager(activity);
                     recyclerView.setLayoutManager(manager);
-                    recyclerView.setAdapter(new ChaptersAdapter(response, mainActivity));
+                    recyclerView.setAdapter(new ChaptersAdapter(uprightResponse, mainActivity));
                     recyclerView.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
                     recyclerView.setHasFixedSize(true);
                 } else {

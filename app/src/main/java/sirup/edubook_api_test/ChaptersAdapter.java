@@ -66,7 +66,7 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
         JSONObject json_data = getItem(position);
         if (null != json_data) {
             try {
-                VH.ID = json_data.getInt("ID");
+                VH.ID = json_data.getInt("id");
                 String title = json_data.getString("title");
                 text.setText(title);
                 final String url = json_data.getString("url");

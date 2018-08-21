@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.android.volley.Response;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -20,6 +21,7 @@ public class LessonsRequest {
     private RecyclerView recyclerView;
     private JSONArray lessonsArray;
 
+    // classe inutile, remettre QueryChapters, QueryLessons et QueryTemplates dans MainActivity plus tard
     LessonsRequest(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
@@ -30,11 +32,19 @@ public class LessonsRequest {
             @Override
             public void onResponse(JSONArray response) {
                 Log.d(TAG, "response :" + response);
+                JSONArray uprightResponse = new JSONArray();
+                try {
+                    for (int i = response.length() - 1; i >= 0; i--) {
+                        uprightResponse.put(response.get(i));
+                    }
+                } catch (JSONException e) {
+                    Log.d("ChaptersAdapter: ", e.getMessage(), e);
+                }
                 if (response.length() > 0) {
                     recyclerView = mainActivity.findViewById(R.id.Lesson_List);
                     LinearLayoutManager manager = new LinearLayoutManager(mainActivity);
                     recyclerView.setLayoutManager(manager);
-                    recyclerView.setAdapter(new LessonsAdapter(response));
+                    recyclerView.setAdapter(new LessonsAdapter(uprightResponse));
                     recyclerView.addItemDecoration(new DividerItemDecoration(mainActivity, DividerItemDecoration.VERTICAL));
                     recyclerView.setHasFixedSize(true);
                 } else {

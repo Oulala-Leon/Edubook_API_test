@@ -5,12 +5,20 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
+import com.android.volley.Response;
 
 import org.json.JSONArray;
+
+import static com.android.volley.VolleyLog.TAG;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -51,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         Button button = findViewById(R.id.return_to_start);
-        button.setOnClickListener(new View.OnClickListener() {
+        /*button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentManager fm = getFragmentManager();
@@ -60,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 fragmentTransaction.detach(lessonsFragment);
                 fragmentTransaction.commit();
             }
-        });
+        })*/
         return true;
     }
 }
