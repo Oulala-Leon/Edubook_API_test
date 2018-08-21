@@ -110,7 +110,7 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
         @Override
         public void onClick(final View itemView) {
             Log.d("clickety", "click");
-            mainActivity.toLessonsFragment("" + ID);
+            mainActivity.toLessonsFragment("" + ID, lessonTitle.getText().toString());
         }
     }
 }

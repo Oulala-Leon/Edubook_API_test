@@ -89,17 +89,23 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
 
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView lessonTitle;
         TextView lessonType;
         TextView lessonPage;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
             lessonTitle = itemView.findViewById(R.id.lesson_title);
             lessonPage = itemView.findViewById(R.id.lesson_page);
             lessonType = itemView.findViewById(R.id.lesson_type);
 
+        }
+
+        @Override
+        public void onClick(final View itemView) {
+            Log.d("clickety", "click");
         }
     }
 }
