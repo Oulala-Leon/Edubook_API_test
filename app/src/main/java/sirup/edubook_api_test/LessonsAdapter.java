@@ -24,9 +24,11 @@ import static com.android.volley.VolleyLog.TAG;
 public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHolder> {
 
     private JSONArray lessonsArray;
+    private MainActivity mainActivity;
 
-    public LessonsAdapter(JSONArray lessons) {
+    public LessonsAdapter(JSONArray lessons, MainActivity mainActivity) {
         lessonsArray = lessons;
+        this.mainActivity = mainActivity;
     }
 
     @Override
@@ -69,6 +71,7 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
 
         if (null != json_data) {
             try {
+                VH.ID = "" + json_data.getInt("ID");
                 String title = json_data.getString("title");
                 text.setText(title);
                 String type = json_data.getString("type");
@@ -93,6 +96,7 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
         TextView lessonTitle;
         TextView lessonType;
         TextView lessonPage;
+        String ID;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -100,12 +104,12 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
             lessonTitle = itemView.findViewById(R.id.lesson_title);
             lessonPage = itemView.findViewById(R.id.lesson_page);
             lessonType = itemView.findViewById(R.id.lesson_type);
-
         }
 
         @Override
         public void onClick(final View itemView) {
             Log.d("clickety", "click");
+            mainActivity.toTemplatesViewPager(ID, lessonTitle.getText().toString());
         }
     }
 }

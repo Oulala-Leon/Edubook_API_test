@@ -1,9 +1,8 @@
 package sirup.edubook_api_test;
 
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.ClipData;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -14,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +26,7 @@ import static com.android.volley.VolleyLog.TAG;
 
 
 public class MainActivity extends AppCompatActivity {
-    private LessonsFragment lessonsFragment;
+    private ReadingFragment readingFragment;
     private FrameLayout frameLayout1;
     private FrameLayout frameLayout2;
     private TextView appTitle;
@@ -45,9 +43,9 @@ public class MainActivity extends AppCompatActivity {
 
         FragmentManager fm = getFragmentManager();
         ChaptersFragment chaptersFragment = new ChaptersFragment();
-        lessonsFragment = new LessonsFragment();
+        readingFragment = new ReadingFragment();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.add(R.id.Lessons_Fragment, lessonsFragment);
+        fragmentTransaction.add(R.id.Lessons_Fragment, readingFragment);
         fragmentTransaction.add(R.id.Chapters_Fragment, chaptersFragment);
         fragmentTransaction.setPrimaryNavigationFragment(chaptersFragment);
         fragmentTransaction.commit();
@@ -62,18 +60,10 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(JSONArray response) {
                 if (response.length() > 0) {
                     Log.d(TAG, "response :" + response);
-                    JSONArray uprightResponse = new JSONArray();
-                    try {
-                        for (int i = response.length() - 1; i >= 0; i--) {
-                            uprightResponse.put(response.get(i));
-                        }
-                    } catch (JSONException e) {
-                        Log.d("ChaptersAdapter: ", e.getMessage(), e);
-                    }
                     RecyclerView recyclerView = findViewById(R.id.Chapters_List);
                     LinearLayoutManager manager = new LinearLayoutManager(getParent());
                     recyclerView.setLayoutManager(manager);
-                    recyclerView.setAdapter(new ChaptersAdapter(uprightResponse, mainActivity));
+                    recyclerView.setAdapter(new ChaptersAdapter(response, mainActivity));
                     recyclerView.addItemDecoration(new DividerItemDecoration(mainActivity, DividerItemDecoration.VERTICAL));
                     recyclerView.setHasFixedSize(true);
                 } else {
@@ -90,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         appTitle.setText(chapterName);
         frameLayout1.setVisibility(View.INVISIBLE);
         frameLayout2.setVisibility(View.VISIBLE);
-        fragmentTransaction.show(lessonsFragment);
+        fragmentTransaction.show(readingFragment);
         fragmentTransaction.commit();
         queryLessons(lessonsURL);
     }
@@ -114,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                     recyclerView = findViewById(R.id.Lesson_List);
                     LinearLayoutManager manager = new LinearLayoutManager(mainActivity);
                     recyclerView.setLayoutManager(manager);
-                    recyclerView.setAdapter(new LessonsAdapter(uprightResponse));
+                    recyclerView.setAdapter(new LessonsAdapter(uprightResponse, mainActivity));
                     recyclerView.addItemDecoration(new DividerItemDecoration(mainActivity, DividerItemDecoration.VERTICAL));
                     recyclerView.setHasFixedSize(true);
                 } else {
@@ -123,6 +113,39 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         myHttpRequest.queryJSONArray(Url + chapterID + "/lessons", response);
+    }
+
+    public void toTemplatesViewPager(String lessonsURL, String lessonName) {
+        appTitle.setText(lessonName);
+        frameLayout1.setVisibility(View.INVISIBLE);
+        frameLayout2.setVisibility(View.INVISIBLE);
+        queryTemplates(lessonsURL);
+    }
+
+    public void queryTemplates(String lessonID) {
+        String Url = "https://api.lelivrescolaire.fr/public/templates/";
+        Response.Listener<JSONArray> response = new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                Log.d(TAG, "response :" + response);
+                JSONArray uprightResponse = new JSONArray();
+                try {
+                    for (int i = response.length() - 1; i >= 0; i--) {
+                        uprightResponse.put(response.get(i));
+                    }
+                } catch (JSONException e) {
+                    Log.d("MainActivity queryTemplates: ", e.getMessage(), e);
+                }
+                if (response.length() > 0) {
+                    ViewPager viewPager = findViewById(R.id.ViewPager);
+                    viewPager.setAdapter(new ViewPagerAdapter(uprightResponse, mainActivity));
+                } else {
+                    Toast.makeText(mainActivity, "You really can't learn anything.", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        };
+        myHttpRequest.queryJSONArray(Url + lessonID, response);
     }
 
     @Override
@@ -140,9 +163,9 @@ public class MainActivity extends AppCompatActivity {
             appTitle.setText(R.string.book_title);
             FragmentManager fm = getFragmentManager();
             FragmentTransaction fragmentTransaction = fm.beginTransaction();
-            fragmentTransaction.detach(lessonsFragment);
-            lessonsFragment = new LessonsFragment();
-            fragmentTransaction.add(R.id.Lessons_Fragment, lessonsFragment);
+            fragmentTransaction.detach(readingFragment);
+            readingFragment = new ReadingFragment();
+            fragmentTransaction.add(R.id.Lessons_Fragment, readingFragment);
             fragmentTransaction.commit();
         }
         return true;
