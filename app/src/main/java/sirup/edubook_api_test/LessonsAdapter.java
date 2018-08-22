@@ -24,9 +24,11 @@ import static com.android.volley.VolleyLog.TAG;
 public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHolder> {
 
     private JSONArray lessonsArray;
+    private MainActivity mainActivity;
 
-    public LessonsAdapter(JSONArray lessons) {
+    public LessonsAdapter(JSONArray lessons, MainActivity mainActivity) {
         lessonsArray = lessons;
+        this.mainActivity = mainActivity;
     }
 
     @Override
@@ -61,22 +63,19 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull LessonsAdapter.ViewHolder VH, int position) {
 
-        final TextView text = VH.lessonTitle;
-        final TextView typeView = VH.lessonType;
-        final TextView pageView = VH.lessonPage;
+        JSONObject jsonData = getItem(position);
 
-        JSONObject json_data = getItem(position);
-
-        if (null != json_data) {
+        if (null != jsonData) {
             try {
-                String title = json_data.getString("title");
-                text.setText(title);
-                String type = json_data.getString("type");
+                VH.ID = "" + jsonData.getInt("id");
+                String title = jsonData.getString("title");
+                VH.lessonTitle.setText(title);
+                String type = jsonData.getString("type");
                 type = type.replaceAll("\"", "");
-                typeView.setText(type);
-                String page =  "Page " + json_data.getInt("page");
-                pageView.setText(page);
-                boolean valid = json_data.getBoolean("valid");
+                VH.lessonType.setText(type);
+                String page =  "Page " + jsonData.getInt("page");
+                VH.lessonPage.setText(page);
+                boolean valid = jsonData.getBoolean("valid");
                 if (!valid) {
                     VH.itemView.setBackgroundColor(0xFF555555);
                 } else {
@@ -93,6 +92,7 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
         TextView lessonTitle;
         TextView lessonType;
         TextView lessonPage;
+        String ID;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -100,12 +100,12 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
             lessonTitle = itemView.findViewById(R.id.lesson_title);
             lessonPage = itemView.findViewById(R.id.lesson_page);
             lessonType = itemView.findViewById(R.id.lesson_type);
-
         }
 
         @Override
         public void onClick(final View itemView) {
             Log.d("clickety", "click");
+            mainActivity.toTemplatesViewPager(ID, lessonTitle.getText().toString());
         }
     }
 }
