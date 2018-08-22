@@ -16,12 +16,14 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import static com.android.volley.VolleyLog.TAG;
 
@@ -70,6 +72,17 @@ public class myHttpRequest extends Volley {
             }
         };
         queue.add(new StringRequest(Request.Method.GET, url, response, error));
+    }
+
+    public static synchronized void queryJsonObject(final String url, final Response.Listener<JSONObject> response) {
+
+        final Response.ErrorListener error = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("I AM THE ERROR MESSAGE IN THE STRINGRESPONSE:", error.getMessage());
+            }
+        };
+        queue.add(new JsonObjectRequest(url, new JSONObject(), response, error));
     }
 
     public static synchronized void queryImage(final Context activityContext, final String url, final ImageView imageView, final int width, final int height, final Callback callback) {

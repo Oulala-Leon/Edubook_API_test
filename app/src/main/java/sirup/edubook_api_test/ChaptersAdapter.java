@@ -63,13 +63,13 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
         final TextView text = VH.lessonTitle;
         final ImageView imageView = VH.lessonImage;
 
-        JSONObject jsonData = getItem(position);
-        if (null != jsonData) {
+        JSONObject json_data = getItem(position);
+        if (null != json_data) {
             try {
-                VH.ID = jsonData.getInt("id");
-                String title = jsonData.getString("title");
+                VH.ID = json_data.getInt("id");
+                String title = json_data.getString("title");
                 text.setText(title);
-                final String url = jsonData.getString("url");
+                final String url = json_data.getString("url");
                 myHttpRequest.queryImage(VH.itemView.getContext(), url, imageView, 1000, 1000, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -81,7 +81,7 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
                         Log.d(TAG, "image download had an error in Picasso");
                     }
                 });
-                boolean valid = jsonData.getBoolean("valid");
+                boolean valid = json_data.getBoolean("valid");
                 if (!valid) {
                     VH.itemView.setBackgroundColor(0xFF555555);
                 } else {

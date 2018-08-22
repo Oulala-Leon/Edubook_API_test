@@ -8,6 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,17 +20,26 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 public class ViewPagerAdapter extends PagerAdapter {
-    private JSONArray templatesArray;
+    private JSONObject template;
+    private String attempt;
     private Context context;
 
-    ViewPagerAdapter(JSONArray templatesArray, Context context) {
-        this.templatesArray = arraySorter(templatesArray);
+    ViewPagerAdapter(JSONObject template, Context context) {
+        //this.template = arraySorter(template);
         this.context = context;
     }
 
-    public JSONArray arraySorter(JSONArray unsortedArray) {
+    ViewPagerAdapter(String attempt, Context context) {
+        //this.template = arraySorter(template);
+        this.context = context;
+        this.attempt = attempt;
+    }
+
+
+    public JSONArray arraySorter(JSONObject unsortedArray) {
         try {
             JSONArray jsonArr = new JSONArray(unsortedArray);
             JSONArray sortedJsonArray = new JSONArray();
@@ -66,25 +79,29 @@ public class ViewPagerAdapter extends PagerAdapter {
     @Override
     @NonNull
     public Object instantiateItem(@NonNull ViewGroup collection, int position) {
+        /*JsonParser parser = new JsonParser();
+
+        JsonObject jsonObject = parser.parse(template.toString()).getAsJsonObject();
+        Set<String> keys = jsonObject.keySet();*/
         LayoutInflater inflater = LayoutInflater.from(context);
-        try {
-            JSONObject jsonObject = templatesArray.getJSONObject(position);
-            if (jsonObject.getString("src") != null) {
-                ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.viewpager_webview, collection, false);
-                collection.addView(layout);
-                return layout;
-            }
-        } catch (JSONException e) {
-            Log.d("MainActivity queryTemplates: ", e.getMessage(), e);
+        Gson gson = new Gson();
+        dunnowhat lel = gson.fromJson(attempt, dunnowhat.class);
+        Log.d("nope", lel.getEnunciated());
+        if (lel.getEnunciated() != null) {
+            ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.viewpager_webview, collection, false);
+            collection.addView(layout);
+            return layout;
+        } else {
+            Log.d("nope", "nope");
+            ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.viewpager_webview, collection, false);
+            collection.addView(layout);
+            return layout;
         }
-        ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.viewpager_webview, collection, false);
-        collection.addView(layout);
-        return layout;
     }
 
     @Override
     public int getCount() {
-        return templatesArray.length(); // stupid temp to fix
+        return 5; // not smart, but testable
     }
 
     @Override
