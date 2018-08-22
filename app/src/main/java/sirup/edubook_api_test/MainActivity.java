@@ -21,6 +21,7 @@ import com.android.volley.Response;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import static com.android.volley.VolleyLog.TAG;
 
@@ -124,29 +125,32 @@ public class MainActivity extends AppCompatActivity {
 
     public void queryTemplates(String lessonID) {
         String Url = "https://api.lelivrescolaire.fr/public/templates/";
-        Response.Listener<JSONArray> response = new Response.Listener<JSONArray>() {
+        Response.Listener<String> response = new Response.Listener<String>() {
             @Override
-            public void onResponse(JSONArray response) {
+            public void onResponse(String response) {
                 Log.d(TAG, "response :" + response);
-                JSONArray uprightResponse = new JSONArray();
                 try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    /*JSONArray uprightResponse = new JSONArray();
                     for (int i = response.length() - 1; i >= 0; i--) {
-                        uprightResponse.put(response.get(i));
+                        uprightResponse.put(jsonResponse.get(i));
                     }
+                    if (response.length() > 0) {
+                        ViewPager viewPager = findViewById(R.id.ViewPager);
+                        viewPager.setAdapter(new ViewPagerAdapter(uprightResponse, mainActivity));
+                    } else {
+                        Toast.makeText(mainActivity, "You really can't learn anything.", Toast.LENGTH_LONG).show();
+                    }*/
                 } catch (JSONException e) {
                     Log.d("MainActivity queryTemplates: ", e.getMessage(), e);
                 }
-                if (response.length() > 0) {
-                    ViewPager viewPager = findViewById(R.id.ViewPager);
-                    viewPager.setAdapter(new ViewPagerAdapter(uprightResponse, mainActivity));
-                } else {
-                    Toast.makeText(mainActivity, "You really can't learn anything.", Toast.LENGTH_LONG).show();
-                }
-
             }
         };
-        myHttpRequest.queryJSONArray(Url + lessonID, response);
+        Log.d("here", Url + lessonID);
+
+        myHttpRequest.queryString(Url + lessonID, response);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
