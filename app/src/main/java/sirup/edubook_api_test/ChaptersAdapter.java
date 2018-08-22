@@ -60,17 +60,14 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder VH, int position) {
-        final TextView text = VH.lessonTitle;
-        final ImageView imageView = VH.lessonImage;
-
         JSONObject json_data = getItem(position);
         if (null != json_data) {
             try {
                 VH.ID = json_data.getInt("id");
                 String title = json_data.getString("title");
-                text.setText(title);
+                VH.lessonTitle.setText(title);
                 final String url = json_data.getString("url");
-                myHttpRequest.queryImage(VH.itemView.getContext(), url, imageView, 1000, 1000, new Callback() {
+                myHttpRequest.queryImage(VH.itemView.getContext(), url, VH.lessonImage, 1000, 1000, new Callback() {
                     @Override
                     public void onSuccess() {
                         Log.d(TAG, "image " + url + " has been downloaded.");

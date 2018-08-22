@@ -63,22 +63,18 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull LessonsAdapter.ViewHolder VH, int position) {
 
-        final TextView text = VH.lessonTitle;
-        final TextView typeView = VH.lessonType;
-        final TextView pageView = VH.lessonPage;
-
         JSONObject jsonData = getItem(position);
 
         if (null != jsonData) {
             try {
                 VH.ID = "" + jsonData.getInt("id");
                 String title = jsonData.getString("title");
-                text.setText(title);
+                VH.lessonTitle.setText(title);
                 String type = jsonData.getString("type");
                 type = type.replaceAll("\"", "");
-                typeView.setText(type);
+                VH.lessonType.setText(type);
                 String page =  "Page " + jsonData.getInt("page");
-                pageView.setText(page);
+                VH.lessonPage.setText(page);
                 boolean valid = jsonData.getBoolean("valid");
                 if (!valid) {
                     VH.itemView.setBackgroundColor(0xFF555555);

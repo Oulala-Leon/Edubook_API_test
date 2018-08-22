@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -86,9 +87,12 @@ public class ViewPagerAdapter extends PagerAdapter {
         LayoutInflater inflater = LayoutInflater.from(context);
         Gson gson = new Gson();
         dunnowhat lel = gson.fromJson(attempt, dunnowhat.class);
-        Log.d("nope", lel.getEnunciated());
+        lel.setenunciated("<em>La listériose est une maladie causée par une bactérie, </em>Listeria monocytogenes<em>, qui se transmet par l’alimentation, notamment par l’intermédiaire du lait et des fromages à base de lait cru ou des coquillages crus.<br /><br /></em>La listériose peut avoir des conséquences très graves pour une femme enceinte, allant jusqu’à la perte du fœtus. La lutte contre cette bactérie en cas d’infection permet de protéger le fœtus.");
         if (lel.getEnunciated() != null) {
             ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.viewpager_webview, collection, false);
+            WebView webView = collection.findViewById(R.id.template_html);
+            Log.d("merde", lel.getEnunciated());
+            webView.loadData(lel.getEnunciated(), "text/html; charset=utf-8", "UTF-8");
             collection.addView(layout);
             return layout;
         } else {
